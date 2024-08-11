@@ -317,9 +317,7 @@ const formatValue = (value: ValueType): string => {
     case "boolean":
       return formatBoolean(value);
     case "object":
-      console.log("## is object", value);
       if (Array.isArray(value)) {
-        console.log("## is array", value);
         return formatArray(value);
       }
       if (value instanceof Date) {

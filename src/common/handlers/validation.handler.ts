@@ -34,8 +34,6 @@ class ValidationHandler<ValidationSchema>
 
   check<T>(schema: string, input: T): void {
     try {
-      console.log("Schema:", JSON.stringify(schema, null, 2));
-      console.log("Input:", JSON.stringify(input, null, 2));
       if (!this.ajvCompiler.validate(schema, input)) {
         const { errors } = this.ajvCompiler;
 

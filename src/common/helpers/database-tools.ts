@@ -14,10 +14,9 @@ interface PoolMetrics {
 const createConnectionMessage = (
   pool: { settings: PoolConfig },
   step: string,
-  alert: boolean = false,
 ) => {
   const protocol = settings.web.fastify.https ? "https" : "http";
-  return `database connection at ${protocol}://${pool.settings.host}:${pool.settings.port} | ${step} | ${pool.settings.user} -> ${pool.settings.database}${alert ? " <----" : ""}`;
+  return `database connection at ${protocol}://${pool.settings.host}:${pool.settings.port} | ${step} | ${pool.settings.user} -> ${pool.settings.database}`;
 };
 
 const testPoolConnections = async (
@@ -44,7 +43,7 @@ const testPoolConnections = async (
     if (result.status === "rejected") {
       const pool = pools[index];
       if (pool) {
-        logger.warn({}, createConnectionMessage(pool, "FAILURE", true));
+        logger.warn({}, createConnectionMessage(pool, "FAILURE"));
       }
       errors.push(result.reason);
     }

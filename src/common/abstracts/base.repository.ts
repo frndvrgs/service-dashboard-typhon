@@ -59,17 +59,12 @@ class BaseRepository<ViewModel, EntityModel, DataModel extends QueryResultRow>
         "${this.schemas.read}"."${this.tableName}"
     `;
 
-      console.log("## rawSql", rawSql);
       const listQuery = sqlTools.createParams({ rawSql, filter, order });
-
-      console.log("## listQuery", listQuery);
 
       const sql = sqlTools.format({
         rawSql: listQuery.sqlWithParams,
         params: listQuery.params,
       });
-
-      console.log("## sql", sql);
 
       const result = await this.database.query<DataModel, DataModel[]>(sql);
 
@@ -244,15 +239,10 @@ class BaseRepository<ViewModel, EntityModel, DataModel extends QueryResultRow>
         RETURNING ${this.columnConstraints.join(", ")}
       `;
 
-      console.log("## rawSql", rawSql);
-
       const data = this.mapper.mapEntityToData(entity);
 
       const columns = Object.keys(data);
       const values = Object.values(data);
-
-      console.log("## columns", columns);
-      console.log("## values", values);
 
       const sql = sqlTools.format({
         rawSql,
@@ -261,8 +251,6 @@ class BaseRepository<ViewModel, EntityModel, DataModel extends QueryResultRow>
           L: values,
         },
       });
-
-      console.log("## sql", sql);
 
       const result = await this.database.query<DataModel, DataModel[]>(sql);
       if (result.rows?.length && result.rows[0]) {
