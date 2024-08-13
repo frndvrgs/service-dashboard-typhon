@@ -1,29 +1,29 @@
 -- psql --host=localhost --port=5432 --username=postgres --echo-all --file=database.sql
 
-CREATE DATABASE service_dashboard
+CREATE DATABASE typhon_service_dashboard
 WITH ENCODING 'UTF8'
      LC_COLLATE 'en_US.UTF-8'
      LC_CTYPE 'en_US.UTF-8'
      TEMPLATE template0;
 
-\connect service_dashboard;
+\connect typhon_service_dashboard;
 
 DROP SCHEMA public;
-DROP ROLE account_module;
-DROP ROLE product_module;
-DROP ROLE content_module;
+DROP ROLE typhon_account;
+DROP ROLE typhon_product;
+DROP ROLE typhon_content;
 
 --------------------------------------------------------------------------------
 -- ACCOUNT MODULE
 --------------------------------------------------------------------------------
 
-CREATE ROLE account_module WITH LOGIN PASSWORD '123456';
+CREATE ROLE typhon_account WITH LOGIN PASSWORD '123456';
 
-CREATE SCHEMA account_data_schema AUTHORIZATION account_module;
-ALTER SCHEMA account_data_schema OWNER TO account_module;
+CREATE SCHEMA account_data_schema AUTHORIZATION typhon_account;
+ALTER SCHEMA account_data_schema OWNER TO typhon_account;
 
-CREATE SCHEMA account_read_schema AUTHORIZATION account_module;
-ALTER SCHEMA account_read_schema OWNER TO account_module;
+CREATE SCHEMA account_read_schema AUTHORIZATION typhon_account;
+ALTER SCHEMA account_read_schema OWNER TO typhon_account;
 
 ---- DATA SCHEMA TABLES
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS account_data_schema.account (
   document JSONB DEFAULT '{}'::JSONB
 );
 
-ALTER TABLE account_data_schema.account OWNER TO account_module;
+ALTER TABLE account_data_schema.account OWNER TO typhon_account;
 
 CREATE UNIQUE INDEX account_id_account_idx
   ON account_data_schema.account (id_account);
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS account_data_schema.subscription (
     REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
 );
 
-ALTER TABLE account_data_schema.subscription OWNER TO account_module;
+ALTER TABLE account_data_schema.subscription OWNER TO typhon_account;
 
 CREATE UNIQUE INDEX subscription_id_subscription_idx
   ON account_data_schema.subscription (id_subscription);
@@ -76,7 +76,7 @@ AS SELECT
   document
 FROM account_data_schema.account;
 
-ALTER VIEW account_read_schema.account OWNER TO account_module;
+ALTER VIEW account_read_schema.account OWNER TO typhon_account;
 
 CREATE VIEW account_read_schema.subscription
 AS SELECT
@@ -89,19 +89,19 @@ AS SELECT
   document
 FROM account_data_schema.subscription;
 
-ALTER VIEW account_read_schema.subscription OWNER TO account_module;
+ALTER VIEW account_read_schema.subscription OWNER TO typhon_account;
 
 --------------------------------------------------------------------------------
 -- PRODUCT MODULE
 --------------------------------------------------------------------------------
 
-CREATE ROLE product_module WITH LOGIN PASSWORD '123456';
+CREATE ROLE typhon_product WITH LOGIN PASSWORD '123456';
 
-CREATE SCHEMA product_data_schema AUTHORIZATION product_module;
-ALTER SCHEMA product_data_schema OWNER TO product_module;
+CREATE SCHEMA product_data_schema AUTHORIZATION typhon_product;
+ALTER SCHEMA product_data_schema OWNER TO typhon_product;
 
-CREATE SCHEMA product_read_schema AUTHORIZATION product_module;
-ALTER SCHEMA product_read_schema OWNER TO product_module;
+CREATE SCHEMA product_read_schema AUTHORIZATION typhon_product;
+ALTER SCHEMA product_read_schema OWNER TO typhon_product;
 
 ---- DATA SCHEMA TABLES
 
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS product_data_schema.work (
     REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
 );
 
-ALTER TABLE product_data_schema.work OWNER TO product_module;
+ALTER TABLE product_data_schema.work OWNER TO typhon_product;
 
 CREATE UNIQUE INDEX product_id_work_idx
   ON product_data_schema.work (id_work);
@@ -138,18 +138,18 @@ AS SELECT
   document
 FROM product_data_schema.work;
 
-ALTER VIEW product_read_schema.work OWNER TO product_module;
+ALTER VIEW product_read_schema.work OWNER TO typhon_product;
 
 --------------------------------------------------------------------------------
 -- CONTENT MODULE
 
-CREATE ROLE content_module WITH LOGIN PASSWORD '123456';
+CREATE ROLE typhon_content WITH LOGIN PASSWORD '123456';
 
-CREATE SCHEMA content_data_schema AUTHORIZATION content_module;
-ALTER SCHEMA content_data_schema OWNER TO content_module;
+CREATE SCHEMA content_data_schema AUTHORIZATION typhon_content;
+ALTER SCHEMA content_data_schema OWNER TO typhon_content;
 
-CREATE SCHEMA content_read_schema AUTHORIZATION content_module;
-ALTER SCHEMA content_read_schema OWNER TO content_module;
+CREATE SCHEMA content_read_schema AUTHORIZATION typhon_content;
+ALTER SCHEMA content_read_schema OWNER TO typhon_content;
 
 ---- DATA SCHEMA TABLES
 
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS content_data_schema.profile (
     REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
 );
 
-ALTER TABLE content_data_schema.profile OWNER TO content_module;
+ALTER TABLE content_data_schema.profile OWNER TO typhon_content;
 
 CREATE UNIQUE INDEX profile_id_profile_idx
   ON content_data_schema.profile (id_profile);
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS content_data_schema.feature (
   document JSONB DEFAULT '{}'::JSONB
 );
 
-ALTER TABLE content_data_schema.feature OWNER TO content_module;
+ALTER TABLE content_data_schema.feature OWNER TO typhon_content;
 
 ---- READ SCHEMA VIEWS
 
@@ -202,7 +202,7 @@ AS SELECT
   document
 FROM content_data_schema.profile;
 
-ALTER VIEW content_read_schema.profile OWNER TO content_module;
+ALTER VIEW content_read_schema.profile OWNER TO typhon_content;
 
 CREATE VIEW content_read_schema.feature
 AS SELECT
@@ -214,4 +214,4 @@ AS SELECT
   document
 FROM content_data_schema.feature;
 
-ALTER VIEW content_read_schema.feature OWNER TO content_module;
+ALTER VIEW content_read_schema.feature OWNER TO typhon_content;

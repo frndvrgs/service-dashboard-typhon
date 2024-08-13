@@ -6,14 +6,14 @@ import cookie from "@fastify/cookie";
 import rateLimit from "@fastify/rate-limit";
 import websocket from "@fastify/websocket";
 
-import { settings } from "../../../core/settings";
+import { settings } from "../../settings";
 import { ServerException } from "../../../common/exceptions";
 import { logger } from "../../../common/helpers/logger";
 
-import routes from "./routes";
-import graphql from "../graphql/adapter";
+import routes from "./web-server.routes";
+import graphql from "../graphql/graphql.service";
 
-import hooks from "./hooks/request-id";
+import hooks from "./hooks/request-id.hook";
 
 import type { FastifyInstance } from "fastify";
 

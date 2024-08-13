@@ -1,1 +1,1 @@
-export { databaseClient } from "./client";
+export { databaseClient } from "./database.service";

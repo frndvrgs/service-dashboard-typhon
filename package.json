@@ -3,15 +3,16 @@
   "description": "service-dashboard-typhon",
   "scripts": {
     "start": "node dist/main.js",
-    "dev": "node dist/main.js | pino-pretty",
+    "start:dev": "node dist/main.js | pino-pretty",
     "build": "tsc",
-    "watch": "tsc --watch",
+    "build:watch": "tsc --watch",
+    "watch": "nodemon dist/main.js",
     "format": "prettier -w .",
     "dpdm": "dpdm --no-tree --no-warning --exit-code circular:1 src/main.ts",
     "dpdm:tree": "dpdm src/main.ts",
     "test": "vitest",
-    "test:integration": "jest test/integration",
-    "test:unit": "jest test/unit-tests",
+    "test:integration": "vitest test/integration",
+    "test:unit": "vitest test/unit-tests",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {

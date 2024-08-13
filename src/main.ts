@@ -12,14 +12,14 @@ import { databaseClient } from "./core/services/database";
  *
  */
 
-class App {
+class Application {
   async start() {
     try {
       logger.info(`:: ${settings.server.name}`);
       await databaseClient.verify();
       await webServer.start();
     } catch (err) {
-      logger.error(`:: error starting the application.`);
+      logger.error(`:: error starting the application.`, err);
       process.exit(1);
     }
   }
@@ -30,32 +30,34 @@ class App {
       await webServer.stop();
       process.exit(0);
     } catch (err) {
-      logger.error(`:: error stopping the applcation.`);
+      logger.error(`:: error stopping the application.`, err);
       process.exit(1);
     }
   }
 }
 
-const app = new App();
+const run = async () => {
+  const application = new Application();
+
+  await application.start();
+
+  process.on("SIGTERM", async () => {
+    await application.stop();
+  });
+
+  process.on("SIGINT", async () => {
+    await application.stop();
+  });
+};
 
 process.stdout.setEncoding("utf8");
 
 process.on("unhandledRejection", (reason) => {
   console.error("Unhandled Rejection:", reason);
-  app.stop();
 });
 
 process.on("uncaughtException", (error) => {
   console.error("Uncaught Exception:", error);
-  app.stop();
 });
 
-process.on("SIGINT", () => {
-  app.stop();
-});
-
-process.on("SIGTERM", () => {
-  app.stop();
-});
-
-app.start();
+run();

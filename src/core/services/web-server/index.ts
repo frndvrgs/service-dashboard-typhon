@@ -1,1 +1,1 @@
-export { webServer } from "./server";
+export { webServer } from "./web-server.service";

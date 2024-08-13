@@ -1,6 +1,6 @@
 import plugin from "fastify-plugin";
 import { settings } from "../../../core/settings";
-import authorizationHook from "./hooks/authorization";
+import authorizationHook from "./hooks/authorization.hook";
 
 import { publicRoutes } from "../../../common/interface/v1/routes";
 import * as accountRoutes from "../../../modules/account/interface/v1/routes";

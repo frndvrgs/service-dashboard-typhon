@@ -1,4 +1,8 @@
-import type { FastifyRequest, FastifyReply } from "fastify";
+import type {
+  FastifyRequest,
+  FastifyReply,
+  FastifyServerOptions,
+} from "fastify";
 import type { JWTPayload } from "jose";
 import type { ErrorObject } from "ajv";
 import type { FastifyRateLimitOptions } from "@fastify/rate-limit";
@@ -16,7 +20,7 @@ import type {
   SessionHandlerPort,
 } from "./common/ports";
 
-import { DescriptionCodes, StatusCodes } from "./common/exceptions/constants";
+import { DESCRIPTION_CODES, STATUS_CODES } from "./common/constants";
 
 import type {
   AccountModel,
@@ -84,8 +88,8 @@ declare namespace CommonModule {
   }
 
   namespace Payload {
-    type DescriptionCodes = keyof typeof DescriptionCodes;
-    type StatusCodes = valueof<typeof StatusCodes>;
+    type DescriptionCodes = keyof typeof DESCRIPTION_CODES;
+    type StatusCodes = valueof<typeof STATUS_CODES>;
 
     namespace Query {
       namespace Select {
@@ -361,7 +365,7 @@ declare namespace CommonModule {
         [key: string]: {
           type: string;
           name: {
-            [key in valueof<typeof StatusCodes>]?: string;
+            [key in valueof<typeof STATUS_CODES>]?: string;
           };
         };
       }

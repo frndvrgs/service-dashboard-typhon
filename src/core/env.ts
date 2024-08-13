@@ -42,7 +42,7 @@ export const env = {
       ),
       DATABASE_NAME: getEnvVariable(
         process.env["DATABASE_ACCOUNT_NAME"],
-        "service_dashboard",
+        "service_dashboard_typhon",
       ),
       DATABASE_POOL_MIN_CLIENTS: parseInt(
         getEnvVariable(process.env["DATABASE_ACCOUNT_POOL_MIN_CLIENTS"], "0"),
@@ -89,7 +89,7 @@ export const env = {
       ),
       DATABASE_NAME: getEnvVariable(
         process.env["DATABASE_PRODUCT_NAME"],
-        "service_dashboard",
+        "service_dashboard_typhon",
       ),
       DATABASE_POOL_MIN_CLIENTS: parseInt(
         getEnvVariable(process.env["DATABASE_PRODUCT_POOL_MIN_CLIENTS"], "0"),
@@ -136,7 +136,7 @@ export const env = {
       ),
       DATABASE_NAME: getEnvVariable(
         process.env["DATABASE_CONTENT_NAME"],
-        "service_dashboard",
+        "service_dashboard_typhon",
       ),
       DATABASE_POOL_MIN_CLIENTS: parseInt(
         getEnvVariable(process.env["DATABASE_CONTENT_POOL_MIN_CLIENTS"], "0"),
@@ -206,62 +206,4 @@ export const env = {
   SESSION_COOKIE_USER_MAXAGE: parseInt(
     getEnvVariable(process.env["SESSION_COOKIE_USER_MAXAGE"], "86400"),
   ),
-};
-
-export const defaults: any = {
-  ENVIRONMENT: "DEVELOPMENT",
-  SERVICE_NAME: "service-dashboard-typhon",
-  SERVICE_VERSION: "1.0.0",
-  SERVICE_NTAG: "TYPHON",
-  SERVICE_DESC: "service-dashboard-typhon",
-  WEB_HOST: "localhost",
-  WEB_PORT: "40110",
-  WEB_TIMEOUT: "0",
-  DATABASE: {
-    ACCOUNT: {
-      HOST: "localhost",
-      PORT: "5432",
-      USER: "account_module",
-      PASSWORD: "123456",
-      NAME: "service_dashboard",
-      POOL_MIN_CLIENTS: "0",
-      POOL_MAX_CLIENTS: "10",
-      POOL_CONNECTION_TIMEOUT: "0",
-      POOL_IDLE_TIMEOUT: "10000",
-      SCHEMA_DATA: "account_data_schema",
-      SCHEMA_READ: "account_read_schema",
-    },
-    PRODUCT: {
-      HOST: "localhost",
-      PORT: "5432",
-      USER: "product_module",
-      PASSWORD: "123456",
-      NAME: "service_dashboard",
-      POOL_MIN_CLIENTS: "0",
-      POOL_MAX_CLIENTS: "10",
-      POOL_CONNECTION_TIMEOUT: "0",
-      POOL_IDLE_TIMEOUT: "10000",
-      SCHEMA_DATA: "product_data_schema",
-      SCHEMA_READ: "product_read_schema",
-    },
-    CONTENT: {
-      HOST: "localhost",
-      PORT: "5432",
-      USER: "content_module",
-      PASSWORD: "123456",
-      NAME: "service_dashboard",
-      POOL_MIN_CLIENTS: "0",
-      POOL_MAX_CLIENTS: "10",
-      POOL_CONNECTION_TIMEOUT: "0",
-      POOL_IDLE_TIMEOUT: "10000",
-      SCHEMA_DATA: "content_data_schema",
-      SCHEMA_READ: "content_data_schema",
-    },
-  },
-  SESSION_COOKIE_SECRET: "",
-  SESSION_TOKEN_SECRET: "rx5VqyTssEmeTLJYe3GU",
-  SESSION_COOKIE_AUTH_NAME: "auth",
-  SESSION_COOKIE_AUTH_MAXAGE: "86400",
-  SESSION_COOKIE_USER_NAME: "user",
-  SESSION_COOKIE_USER_MAXAGE: "86400",
 };

@@ -2,11 +2,11 @@ import plugin from "fastify-plugin";
 import mercurius from "mercurius";
 import { mergeSchemas } from "@graphql-tools/schema";
 
-import { settings } from "../../../core/settings";
+import { settings } from "../../settings";
 
-import * as account_api_v1 from "../../../modules/account/interface/v1/";
-import * as content_api_v1 from "../../../modules/content/interface/v1/";
-import * as product_api_v1 from "../../../modules/product/interface/v1/";
+import * as account_api_v1 from "../../../modules/account/interface/v1";
+import * as content_api_v1 from "../../../modules/content/interface/v1";
+import * as product_api_v1 from "../../../modules/product/interface/v1";
 
 import type { FastifyInstance } from "fastify";
 import type { IResolvers } from "mercurius";
