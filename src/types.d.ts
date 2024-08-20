@@ -425,11 +425,6 @@ declare namespace Core {
       useRequestScope: boolean;
     }
 
-    interface SessionCookie {
-      name: string;
-      options: SessionCookieOptions;
-    }
-
     interface SessionCookieOptions {
       path: string;
       secure: boolean;
@@ -438,6 +433,11 @@ declare namespace Core {
       domain: string | undefined;
       signed: boolean;
       httpOnly: boolean;
+    }
+
+    interface SessionCookie {
+      name: string;
+      options: SessionCookieOptions;
     }
 
     interface Session {

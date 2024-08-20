@@ -60,7 +60,7 @@ class RemoveSubscriptionService
         "INTERNAL_SERVER_ERROR",
         500,
         "database error.",
-        "subscription repository.remove() returning null.",
+        "repository.remove() returning null.",
       );
     }
     return {

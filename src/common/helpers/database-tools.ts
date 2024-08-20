@@ -1,4 +1,3 @@
-import { settings } from "../../core/settings";
 import { logger } from "./logger";
 
 import type { Pool, PoolConfig } from "pg";
@@ -15,8 +14,7 @@ const createConnectionMessage = (
   pool: { settings: PoolConfig },
   step: string,
 ) => {
-  const protocol = settings.web.fastify.https ? "https" : "http";
-  return `database connection at ${protocol}://${pool.settings.host}:${pool.settings.port} | ${step} | ${pool.settings.user} -> ${pool.settings.database}`;
+  return `database connection at ${pool.settings.host}:${pool.settings.port} | ${step.toUpperCase()} | ${pool.settings.user} -> ${pool.settings.database}`;
 };
 
 const testPoolConnections = async (
@@ -28,10 +26,10 @@ const testPoolConnections = async (
   const results = await Promise.allSettled(
     pools.map((pool) => {
       return (async () => {
-        logger.info({}, createConnectionMessage(pool, "TESTING"));
+        logger.info({}, createConnectionMessage(pool, "testing"));
         const client = await pool.instance.connect();
         client.release();
-        logger.info({}, createConnectionMessage(pool, "SUCCESS"));
+        logger.info({}, createConnectionMessage(pool, "success"));
         return pool;
       })();
     }),
@@ -43,7 +41,7 @@ const testPoolConnections = async (
     if (result.status === "rejected") {
       const pool = pools[index];
       if (pool) {
-        logger.warn({}, createConnectionMessage(pool, "FAILURE"));
+        logger.error({}, createConnectionMessage(pool, "failure"));
       }
       errors.push(result.reason);
     }

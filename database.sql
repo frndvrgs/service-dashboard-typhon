@@ -9,9 +9,9 @@ WITH ENCODING 'UTF8'
 \connect typhon_service_dashboard;
 
 DROP SCHEMA public;
-DROP ROLE typhon_account;
-DROP ROLE typhon_product;
-DROP ROLE typhon_content;
+DROP ROLE IF EXISTS typhon_account;
+DROP ROLE IF EXISTS typhon_product;
+DROP ROLE IF EXISTS typhon_content;
 
 --------------------------------------------------------------------------------
 -- ACCOUNT MODULE

@@ -96,7 +96,7 @@ class DatabaseClient {
       throw new ServerException(
         "DATABASE_CLIENT_ERROR",
         500,
-        "database module internal error.",
+        "database service internal error.",
         "DatabaseClient.verify()",
         err,
       );
@@ -115,7 +115,7 @@ class DatabaseClient {
       throw new ServerException(
         "DATABASE_CLIENT_ERROR",
         500,
-        "database module internal error.",
+        "database service internal error.",
         "DatabaseClient.stop()",
         err,
       );

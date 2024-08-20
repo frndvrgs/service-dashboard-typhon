@@ -77,7 +77,7 @@ class CreateSubscriptionService
     const output = this.mapper.mapDataToView(resource);
     return {
       status: {
-        description: "ACCOUNT_CREATED",
+        description: "SUBSCRIPTION_CREATED",
         code: 201,
         context: "APPLICATION",
       },

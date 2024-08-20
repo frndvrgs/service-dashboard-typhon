@@ -50,7 +50,7 @@ class RemoveAccountService implements AccountModule.Port.Service.RemoveAccount {
         "INTERNAL_SERVER_ERROR",
         500,
         "database error.",
-        "account repository.remove() returning null.",
+        "repository.remove() returning null.",
       );
     }
 
