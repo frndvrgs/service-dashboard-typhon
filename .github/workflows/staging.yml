@@ -36,21 +36,7 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Get package version
-      id: package-version
-      run: echo "::set-output name=version::$(node -p "require('./package.json').version")"
-
     - name: Prepare dependencies
       run: |
         rm -rf node_modules
         npm ci --only=production
-
-    - name: Generate package
-      run: |
-        tar --exclude='node_modules' -czf "staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz" .
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: staging-package
-        path: staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz
