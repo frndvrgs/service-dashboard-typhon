@@ -3,11 +3,9 @@ name: Development CI
 on:
   push:
     branches: [ development ]
-  pull_request:
-    branches: [ development ]
 
 jobs:
-  check-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:

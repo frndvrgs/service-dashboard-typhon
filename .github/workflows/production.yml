@@ -1,8 +1,8 @@
-name: Staging CI
+name: Production CI/CD - Elastic BeanStalk
 
 on:
   push:
-    branches: [ staging ]
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
@@ -47,10 +47,21 @@ jobs:
 
     - name: Generate package
       run: |
-        tar --exclude='node_modules' -czf "staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz" .
+        tar --exclude='node_modules' -czf "production-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz" .
+
+    # - name: Deploy to AWS EB
+    #   uses: einaregilsson/beanstalk-deploy@v21
+    #   with:
+    #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     application_name: ${{ secrets.EB_APPLICATION_NAME }}
+    #     environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+    #     version_label: "${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}-${{ github.sha }}"
+    #     region: ${{ secrets.AWS_REGION }}
+    #     deployment_package: "production-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz"
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: staging-package
-        path: staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz
+        name: production-package
+        path: production-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz
