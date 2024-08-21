@@ -1,4 +1,4 @@
-name: Production CI/CD - Elastic BeanStalk
+name: CI/CD - Production
 
 on:
   push:

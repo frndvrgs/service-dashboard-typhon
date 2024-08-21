@@ -1,4 +1,4 @@
-name: Development CI
+name: CI - Development
 
 on:
   push:
