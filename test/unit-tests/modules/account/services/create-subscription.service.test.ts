@@ -98,7 +98,7 @@ describe("CreateSubscriptionService", () => {
       entityExport,
     );
     expect(mockMapper.mapDataToView).toHaveBeenCalled();
-    expect(result.status.description).toBe("ACCOUNT_CREATED");
+    expect(result.status.description).toBe("SUBSCRIPTION_CREATED");
     expect(result.status.code).toBe(201);
   });
 
@@ -203,7 +203,7 @@ describe("CreateSubscriptionService", () => {
       type: "CORPORATE",
       status: "ACTIVE",
     });
-    expect(result.status.description).toBe("ACCOUNT_CREATED");
+    expect(result.status.description).toBe("SUBSCRIPTION_CREATED");
     expect(result.status.code).toBe(201);
   });
 });
