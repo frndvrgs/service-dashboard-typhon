@@ -41,13 +41,19 @@ jobs:
         rm -rf node_modules
         npm ci --only=production
 
+    # ELASTIC BEANSTALK
+
+    # - name: Get package version
+    #   id: package-version
+    #   run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
     # - name: Deploy to AWS EB
     #   uses: einaregilsson/beanstalk-deploy@v21
     #   with:
     #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
     #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     application_name: ${{ secrets.EB_APPLICATION_NAME }}
-    #     environment_name: ${{ secrets.EB_ENVIRONMENT_NAME }}
+    #     application_name: ${{ secrets.EB_APPLICATION_NAME_TYPHON }}
+    #     environment_name: ${{ secrets.EB_ENVIRONMENT_NAME_TYPHON }}
     #     version_label: "${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}-${{ github.sha }}"
-    #     region: ${{ secrets.AWS_REGION }}
+    #     region: ${{ secrets.AWS_REGION_TYPHON }}
     #     deployment_package: "production-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.tar.gz"

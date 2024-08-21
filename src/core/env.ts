@@ -6,6 +6,8 @@ dotenv.config();
 
 export const env = {
   ENVIRONMENT: getEnvVariable(process.env["NODE_ENV"], "DEVELOPMENT"),
+  DEVELOPMENT_PORT: parseInt(getEnvVariable(process.env["DEVELOPMENT_PORT"], "40110")),
+  PRODUCTION_PORT: parseInt(getEnvVariable(process.env["PORT"], "3000")),
   SERVICE_NAME: getEnvVariable(
     process.env["SERVICE_NAME"],
     "service-dashboard-typhon",
@@ -16,8 +18,6 @@ export const env = {
     process.env["SERVICE_DESC"],
     "service-dashboard-typhon",
   ),
-  WEB_HOST: getEnvVariable(process.env["WEB_HOST"], "localhost"),
-  WEB_PORT: parseInt(getEnvVariable(process.env["WEB_PORT"], "40110")),
   WEB_SECURE: process.env["WEB_SECURE"] === "true",
   WEB_HTTP2: process.env["WEB_HTTP2"] === "true",
   WEB_TRUST_PROXY: process.env["WEB_TRUST_PROXY"] === "true",
