@@ -1,0 +1,42 @@
+name: Staging CI
+
+on:
+  push:
+    branches: [ staging ]
+  pull_request:
+    branches: [ staging ]
+
+jobs:
+  test-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run circular dependencies check
+      run: npm run dpdm
+
+    - name: Run tests
+      run: npm run test
+
+    - name: Get package version
+      id: package-version
+      run: echo "::set-output name=version::$(node -p "require('./package.json').version")"
+
+    - name: Generate staging artifact
+      run: |
+        zip -r "staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.zip" . -x '*.git*'
+
+    - name: Upload staging artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: staging-package
+        path: staging-${{ github.event.repository.name }}-${{ steps.package-version.outputs.version }}.zip
