@@ -3,4 +3,5 @@ coverage
 dist
 test/coverage
 .env
+.deploy/.env.aws.json
 .DS_Store

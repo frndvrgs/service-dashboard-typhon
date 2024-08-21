@@ -21,3 +21,8 @@ $ node dist/main.js | grep '"level":30'
 set NODE_ENV=PRODUCTION && node dist/main.js
 set NODE_ENV=DEVELOPMENT && node dist/main.js | pino-pretty
 ```
+
+```
+aws elasticbeanstalk update-environment --environment-name service-dashboard-typhon-env --option-settings file://.env.aws.json
+aws elasticbeanstalk describe-environments --environment-names service-dashboard-typhon-env
+```
