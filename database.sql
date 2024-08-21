@@ -8,25 +8,27 @@ WITH ENCODING 'UTF8'
 
 \connect service_dashboard_typhon;
 
-DROP SCHEMA public;
+DROP SCHEMA IF EXISTS public;
 DROP ROLE IF EXISTS typhon_account;
 DROP ROLE IF EXISTS typhon_product;
 DROP ROLE IF EXISTS typhon_content;
 
---------------------------------------------------------------------------------
+-- Create roles
+CREATE ROLE typhon_account WITH LOGIN PASSWORD '### UPDATE ###';
+CREATE ROLE typhon_product WITH LOGIN PASSWORD '### UPDATE ###';
+CREATE ROLE typhon_content WITH LOGIN PASSWORD '### UPDATE ###';
+
+-- Grant necessary permissions
+GRANT ALL ON DATABASE service_dashboard_typhon TO typhon_account, typhon_product, typhon_content;
+
+-- Connect as typhon_account
+\connect service_dashboard_typhon typhon_account
+
 -- ACCOUNT MODULE
---------------------------------------------------------------------------------
+CREATE SCHEMA account_data_schema;
+CREATE SCHEMA account_read_schema;
 
-CREATE ROLE typhon_account WITH LOGIN PASSWORD '123456';
-
-CREATE SCHEMA account_data_schema AUTHORIZATION typhon_account;
-ALTER SCHEMA account_data_schema OWNER TO typhon_account;
-
-CREATE SCHEMA account_read_schema AUTHORIZATION typhon_account;
-ALTER SCHEMA account_read_schema OWNER TO typhon_account;
-
----- DATA SCHEMA TABLES
-
+-- DATA SCHEMA TABLES
 CREATE TABLE IF NOT EXISTS account_data_schema.account (
   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   id_account UUID NOT NULL,
@@ -37,8 +39,6 @@ CREATE TABLE IF NOT EXISTS account_data_schema.account (
   scope TEXT DEFAULT 'user',
   document JSONB DEFAULT '{}'::JSONB
 );
-
-ALTER TABLE account_data_schema.account OWNER TO typhon_account;
 
 CREATE UNIQUE INDEX account_id_account_idx
   ON account_data_schema.account (id_account);
@@ -59,13 +59,10 @@ CREATE TABLE IF NOT EXISTS account_data_schema.subscription (
     REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
 );
 
-ALTER TABLE account_data_schema.subscription OWNER TO typhon_account;
-
 CREATE UNIQUE INDEX subscription_id_subscription_idx
   ON account_data_schema.subscription (id_subscription);
 
----- READ SCHEMA TABLE VIEWS
-
+-- READ SCHEMA TABLE VIEWS
 CREATE VIEW account_read_schema.account
 AS SELECT
   id_account,
@@ -75,8 +72,6 @@ AS SELECT
   scope,
   document
 FROM account_data_schema.account;
-
-ALTER VIEW account_read_schema.account OWNER TO typhon_account;
 
 CREATE VIEW account_read_schema.subscription
 AS SELECT
@@ -89,22 +84,14 @@ AS SELECT
   document
 FROM account_data_schema.subscription;
 
-ALTER VIEW account_read_schema.subscription OWNER TO typhon_account;
+-- Connect as typhon_product
+\connect service_dashboard_typhon typhon_product
 
---------------------------------------------------------------------------------
 -- PRODUCT MODULE
---------------------------------------------------------------------------------
+CREATE SCHEMA product_data_schema;
+CREATE SCHEMA product_read_schema;
 
-CREATE ROLE typhon_product WITH LOGIN PASSWORD '123456';
-
-CREATE SCHEMA product_data_schema AUTHORIZATION typhon_product;
-ALTER SCHEMA product_data_schema OWNER TO typhon_product;
-
-CREATE SCHEMA product_read_schema AUTHORIZATION typhon_product;
-ALTER SCHEMA product_read_schema OWNER TO typhon_product;
-
----- DATA SCHEMA TABLES
-
+-- DATA SCHEMA TABLES
 CREATE TABLE IF NOT EXISTS product_data_schema.work (
   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   id_work UUID NOT NULL,
@@ -114,18 +101,13 @@ CREATE TABLE IF NOT EXISTS product_data_schema.work (
   updated_at TIMESTAMPTZ NOT NULL,
   name TEXT NOT NULL,
   level NUMERIC(5, 2) NOT NULL,
-  document JSONB DEFAULT '{}'::JSONB,
-  CONSTRAINT work_id_account_fkey FOREIGN KEY (id_account)
-    REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
+  document JSONB DEFAULT '{}'::JSONB
 );
-
-ALTER TABLE product_data_schema.work OWNER TO typhon_product;
 
 CREATE UNIQUE INDEX product_id_work_idx
   ON product_data_schema.work (id_work);
 
----- READ SCHEMA TABLE VIEWS
-
+-- READ SCHEMA TABLE VIEWS
 CREATE VIEW product_read_schema.work
 AS SELECT
   id_work,
@@ -138,21 +120,14 @@ AS SELECT
   document
 FROM product_data_schema.work;
 
-ALTER VIEW product_read_schema.work OWNER TO typhon_product;
+-- Connect as typhon_content
+\connect service_dashboard_typhon typhon_content
 
---------------------------------------------------------------------------------
 -- CONTENT MODULE
+CREATE SCHEMA content_data_schema;
+CREATE SCHEMA content_read_schema;
 
-CREATE ROLE typhon_content WITH LOGIN PASSWORD '123456';
-
-CREATE SCHEMA content_data_schema AUTHORIZATION typhon_content;
-ALTER SCHEMA content_data_schema OWNER TO typhon_content;
-
-CREATE SCHEMA content_read_schema AUTHORIZATION typhon_content;
-ALTER SCHEMA content_read_schema OWNER TO typhon_content;
-
----- DATA SCHEMA TABLES
-
+-- DATA SCHEMA TABLES
 CREATE TABLE IF NOT EXISTS content_data_schema.profile (
   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   id_profile UUID NOT NULL,
@@ -161,12 +136,8 @@ CREATE TABLE IF NOT EXISTS content_data_schema.profile (
   updated_at TIMESTAMPTZ NOT NULL,
   username TEXT NOT NULL,
   name TEXT NOT NULL,
-  document JSONB DEFAULT '{}'::JSONB,
-  CONSTRAINT profile_id_account_fkey FOREIGN KEY (id_account)
-    REFERENCES account_data_schema.account (id_account) ON DELETE CASCADE
+  document JSONB DEFAULT '{}'::JSONB
 );
-
-ALTER TABLE content_data_schema.profile OWNER TO typhon_content;
 
 CREATE UNIQUE INDEX profile_id_profile_idx
   ON content_data_schema.profile (id_profile);
@@ -187,10 +158,7 @@ CREATE TABLE IF NOT EXISTS content_data_schema.feature (
   document JSONB DEFAULT '{}'::JSONB
 );
 
-ALTER TABLE content_data_schema.feature OWNER TO typhon_content;
-
----- READ SCHEMA VIEWS
-
+-- READ SCHEMA VIEWS
 CREATE VIEW content_read_schema.profile
 AS SELECT
   id_profile,
@@ -202,8 +170,6 @@ AS SELECT
   document
 FROM content_data_schema.profile;
 
-ALTER VIEW content_read_schema.profile OWNER TO typhon_content;
-
 CREATE VIEW content_read_schema.feature
 AS SELECT
   id_feature,
@@ -214,4 +180,14 @@ AS SELECT
   document
 FROM content_data_schema.feature;
 
-ALTER VIEW content_read_schema.feature OWNER TO typhon_content;
+-- Connect back as the original user (usually postgres)
+\connect service_dashboard_typhon postgres
+
+-- Grant necessary permissions
+GRANT USAGE ON SCHEMA account_read_schema TO typhon_product, typhon_content;
+GRANT USAGE ON SCHEMA product_read_schema TO typhon_account, typhon_content;
+GRANT USAGE ON SCHEMA content_read_schema TO typhon_account, typhon_product;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA account_read_schema TO typhon_product, typhon_content;
+GRANT SELECT ON ALL TABLES IN SCHEMA product_read_schema TO typhon_account, typhon_content;
+GRANT SELECT ON ALL TABLES IN SCHEMA content_read_schema TO typhon_account, typhon_product;
