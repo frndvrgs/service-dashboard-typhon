@@ -3,7 +3,7 @@ import { env } from "./env";
 import type { Core } from "@types";
 
 const web: Core.Settings.Web = {
-  host: env.ENVIRONMENT === 'production' ? '0.0.0.0' : 'locahost',
+  host: env.ENVIRONMENT === 'production' ? '0.0.0.0' : 'localhost',
   port: env.ENVIRONMENT === 'production' ? env.PRODUCTION_PORT : env.DEVELOPMENT_PORT,
   fastify: {
     https: env.WEB_SECURE,
